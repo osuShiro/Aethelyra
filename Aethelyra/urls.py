@@ -27,6 +27,5 @@ urlpatterns = [
     url(r'^chapters/(?P<action>.+)/success/$', views.success),
     url(r'^view/$', views.view_chapter),
     url(r'^login/$', auth_views.login, {'template_name': 'rpgroup5/registration/login.html'}, name='login'),
-    url(r'^abargia/(\d+)/$', views.abargia_logs),
     url(r'^abargia/$', views.abargia)
 ]

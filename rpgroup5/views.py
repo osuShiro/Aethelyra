@@ -86,11 +86,3 @@ def view_chapter(request):
 
 def abargia(request):
     return render(request,'rpgroup5/abargia.html')
-
-def abargia_logs(request, session):
-    try:
-        number=int(session)
-    except ValueError:
-        raise Http404()
-    filename='rpgroup5/session'+str(number)+'.html'
-    return render(request,filename)
