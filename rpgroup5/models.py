@@ -7,3 +7,8 @@ class Chapter(models.Model):
 
     def __str__(self):
         return self.title
+
+class SessionLog(models.Model):
+    rp_group=models.CharField(max_length=32)
+    title=models.CharField(max_length=128)
+    content=models.TextField(null=True,blank=True)

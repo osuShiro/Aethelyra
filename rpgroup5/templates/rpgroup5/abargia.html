@@ -5,8 +5,20 @@
     <title>Abargia session chat logs</title>
 </head>
 <body>
-    <ul>Session list:
-        <li><a href="1/">session 1</a></li>
-    </ul>
+    <form method="post">
+            {% csrf_token %}
+            Select session logs to read:
+            {% if session_list %}
+                <select name="title">
+                    <option>select session</option>
+                    {% for session in session_list %}
+                        <option value={{session.title}}>{{session.title}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="read session logs">
+            {% else %}
+            No session logs yet.
+            {% endif %}
+        </form>
 </body>
 </html>
