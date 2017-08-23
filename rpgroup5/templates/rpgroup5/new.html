@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New chapter</title>
+</head>
+<body>
+    <form action="success/" method="post">
+        {% csrf_token %}
+        Chapter title: <input type="text" name="title" maxlength="32"><br />
+        Chapter content:<br />
+        <textarea rows="50" cols="200" name="content"></textarea><br />
+        <input type="submit" value="add chapter">
+    </form>
+</body>
+</html>

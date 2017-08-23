@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter admin page</title>
+</head>
+<body>
+    <p><a href="add/">Add chapter</a></p>
+    {% if chapter_list %}
+        <p>Existing chapters:</p>
+        <ul>
+            {% for chapter in chapter_list %}
+            <li>
+                <form action="edit/" method="post">
+                    {% csrf_token %}
+                    {{chapter.title}} <input type="submit" value="edit">
+                    <input type="hidden" name="title" value={{chapter.title}}>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No chapters.</p>
+    {% endif %}
+</body>
+</html>

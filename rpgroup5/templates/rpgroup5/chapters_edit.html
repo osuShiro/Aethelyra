@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit chapter</title>
+</head>
+<body>
+    <h4><form action="success/" method="post">
+            {% csrf_token %}
+            Editing chapter.
+            <input type="hidden" name="delete_title" value={{chapter.title}}>
+            <input type="submit" value="delete" onclick="return confirm('Are you sure?')">
+        </form>
+    </h4>
+    <p>
+        <form action="success/" method="post">
+            {% csrf_token %}
+            Title:
+            <input type="text" maxlength="32" name="title" value={{chapter.title}}>
+            <input type="hidden" name="old_title" value={{chapter.title}}>
+            <input type="submit" value="change title">
+        </form>
+        <form action="success/" method="post">
+            {% csrf_token %}
+            <textarea rows="50" cols="200" name="content">{{chapter.content}}</textarea><br />
+            <input type="hidden" name="chapter_title" value={{chapter.title}}>
+            <input type="submit" value="edit chapter">
+        </form>
+    </p>
+</body>
+</html>

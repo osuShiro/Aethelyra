@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Read chapters</title>
+</head>
+<body>
+    <p>
+        <form method="post">
+            {% csrf_token %}
+            Select chapter to read:
+            {% if chapter_list %}
+                <select name="title">
+                    {% if not chapter %}<option>select chapter</option>{% endif %}
+                    {% for chapter in chapter_list %}
+                        <option value={{chapter.title}}>{{chapter.title}}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="go to chapter">
+            {% else %}
+            No chapters yet.
+            {% endif %}
+        </form>
+    </p>
+    {% if chapter %}
+    <p>
+        Reading chapter "{{chapter.title}}":
+    </p>
+    <textarea readonly rows="50" cols="200">{{chapter.content}}</textarea>
+    {% endif %}
+</body>
+</html>
