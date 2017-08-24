@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New chatlog</title>
+</head>
+<body>
+    <form action="success/" method="post">
+        {% csrf_token %}
+        Group: <input type="text" name="group" maxlength="32"><br />
+        Chatlog title: <input type="text" name="title" maxlength="128"><br />
+        Chapter content:<br />
+        <textarea rows="50" cols="200" name="content"></textarea><br />
+        <input type="submit" value="add chatlog">
+    </form>
+</body>
+</html>

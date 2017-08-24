@@ -11,7 +11,7 @@
             Select chapter to read:
             {% if chapter_list %}
                 <select name="title">
-                    {% if not chapter %}<option>select chapter</option>{% endif %}
+                    <option>select chapter</option>
                     {% for chapter in chapter_list %}
                         <option value={{chapter.title}}>{{chapter.title}}</option>
                     {% endfor %}

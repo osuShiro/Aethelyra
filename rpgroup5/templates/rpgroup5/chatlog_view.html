@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Abargia session chat logs</title>
+    <link rel="stylesheet" type="text/css" href="/static/chatlog.css">
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        Select session logs to read for {{group}}:<br />
+        {% if chatlog_list %}
+            <select name="title">
+                <option>select session</option>
+                {% for chatlog in chatlog_list %}
+                    <option value={{chatlog.title}}>{{chatlog.title}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="read session logs">
+        {% else %}
+        No session logs yet.
+        {% endif %}
+    </form>
+    {% if chatlog %}
+        <h4>{{chatlog.title}}</h4>
+        {{chatlog.content|safe}}
+    {% endif %}
+</body>
+</html>

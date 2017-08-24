@@ -40,7 +40,7 @@ def success(request, action):
         if 'title' not in request.POST or 'content' not in request.POST:
             return HttpResponse('Invalid chapter format (missing title or content).')
         else:
-            chapter_title=request.POST['title'].replace(' ', '').replace('\n', '')
+            chapter_title=request.POST['title'].replace(' ', '_').replace('\n', '_')
             chapter_content=request.POST['content']
             if chapter_title=='' or chapter_title.isspace():
                 return HttpResponse('Title cannot be blank.')
@@ -84,13 +84,98 @@ def view_chapter(request):
     else:
         return HttpResponse('Wtf are you trying to do')
 
-def abargia(request):
-    return render(request,'rpgroup5/abargia.html')
+@login_required(login_url='/login/')
+@permission_required('rpgroup5.add_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.change_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.remove_sessionlog',raise_exception=True)
+def chatlog_admin(request):
+    if request.method=='GET':
+        return render(request,'rpgroup5/chatlogs_admin.html')
+    elif request.method=='POST':
+        if 'group' in request.POST:
+            group=request.POST['group']
+            chatlog_list=list(SessionLog.objects.filter(rp_group=group.lower()))
+            return render(request,'rpgroup5/chatlogs_admin.html', {'group':group, 'chatlog_list':chatlog_list})
+    else:
+        render(Http404)
 
-def abargia_logs(request, session):
-    try:
-        number=int(session)
-    except ValueError:
-        raise Http404()
-    filename='rpgroup5/session'+str(number)+'.html'
-    return render(request,filename)
+@login_required(login_url='/login/')
+@permission_required('rpgroup5.add_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.change_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.remove_sessionlog',raise_exception=True)
+def chatlog_edit(request, group):
+    if 'title' not in request.POST or request.POST['title']=='':
+        return HttpResponse('No chatlog selected.')
+    else:
+        chatlog_title=request.POST['title']
+        chatlog = SessionLog.objects.get(title=chatlog_title, rp_group=group.lower())
+        if chatlog:
+            pass
+        else:
+            return HttpResponse(group)
+    return render(request,'rpgroup5/chatlogs_edit.html',{'chatlog':chatlog})
+
+def chatlog_success(request,group,action):
+    if action=='add':
+        if 'title' not in request.POST or 'content' not in request.POST or 'group' not in request.POST:
+            return HttpResponse('Invalid chapter format (missing title, group or content).')
+        else:
+            chatlog_title=request.POST['title'].replace(' ', '_').replace('\n', '_')
+            chatlog_content=request.POST['content']
+            chatlog_group=request.POST['group'].lower()
+            if chatlog_title=='' or chatlog_title.isspace():
+                return HttpResponse('Title cannot be blank.')
+            if chatlog_content=='' or chatlog_content.isspace():
+                return HttpResponse('Chatlog cannot be empty.')
+            existing_chatlogs=list(SessionLog.objects.filter(rp_group=chatlog_group, title=chatlog_title))
+            if existing_chatlogs==[]:
+                new_chatlog=SessionLog(rp_group=chatlog_group, title=chatlog_title, content=chatlog_content)
+                new_chatlog.save()
+                return render(request, 'rpgroup5/chatlog_success.html', {'action': 'added chatlog'})
+            else:
+                return HttpResponse('Chapter name already exists.')
+    elif action=='edit':
+        if 'title' in request.POST:
+            chatlog=SessionLog.objects.get(rp_group=group.lower(), title=request.POST['old_title'])
+            chatlog.title=request.POST['title'].replace(' ', '').replace('\n', '')
+            chatlog.save()
+            return render(request,'rpgroup5/chatlog_success.html', {'action': 'changed title'})
+        elif 'content' in request.POST:
+            if 'chatlog_title' not in request.POST:
+                return HttpResponse('Chatlog not found.')
+            else:
+                chatlog=SessionLog.objects.get(rp_group=group.lower(), title=request.POST['chatlog_title'])
+                chatlog.content=request.POST['content']
+                chatlog.save()
+                return render(request,'rpgroup5/chatlog_success.html', {'action': 'updated chatlog'})
+        elif 'delete_title' in request.POST:
+            chatlog = SessionLog.objects.get(title=request.POST['delete_title'], rp_group=group.lower())
+            if chatlog:
+                chatlog.delete()
+                return render(request, 'rpgroup5/success.html', {'action': 'deleted chapter'})
+            else:
+                return HttpResponse('Could not find chatlog to delete.')
+    else:
+        return HttpResponse('Wtf are you trying to do<br />'+action)
+
+@login_required(login_url='/login/')
+@permission_required('rpgroup5.add_sessionlog', raise_exception=True)
+def new_chatlog(request):
+    if request.method == 'GET':
+        return render(request, 'rpgroup5/chatlog_new.html')
+    else:
+        return HttpResponse('Wtf are you trying to do')
+
+def chatlog_view(request, group):
+    chatlog_list = list(SessionLog.objects.filter(rp_group=group.lower()))
+    if request.method=='GET':
+        return render(request,'rpgroup5/chatlog_view.html', {'group':group, 'chatlog_list':chatlog_list})
+    elif request.method=='POST':
+        if 'title' not in request.POST:
+            return HttpResponse('No session selected.')
+        else:
+            chatlog=SessionLog.objects.get(rp_group=group.lower(), title=request.POST['title'])
+            print(chatlog.title)
+            return render(request, 'rpgroup5/chatlog_view.html', {'group': group, 'chatlog_list': chatlog_list, 'chatlog': chatlog})
+    else:
+        return HttpResponse('Wtf are you trying to do')
