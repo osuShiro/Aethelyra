@@ -148,8 +148,15 @@ def chatlog_success(request,group,action):
                 chatlog.content=request.POST['content']
                 chatlog.save()
                 return render(request,'rpgroup5/chatlog_success.html', {'action': 'updated chatlog'})
+        elif 'delete_title' in request.POST:
+            chatlog = SessionLog.objects.get(title=request.POST['delete_title'], rp_group=group.lower())
+            if chatlog:
+                chatlog.delete()
+                return render(request, 'rpgroup5/success.html', {'action': 'deleted chapter'})
+            else:
+                return HttpResponse('Could not find chatlog to delete.')
     else:
-        return HttpResponse('Wtf are you trying to do')
+        return HttpResponse('Wtf are you trying to do<br />'+action)
 
 @login_required(login_url='/login/')
 @permission_required('rpgroup5.add_sessionlog', raise_exception=True)

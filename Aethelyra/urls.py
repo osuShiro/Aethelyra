@@ -27,10 +27,10 @@ urlpatterns = [
     url(r'^chapters/(?P<action>.+)/success/$', views.success),
     url(r'^view/$', views.view_chapter),
     url(r'^login/$', auth_views.login, {'template_name': 'rpgroup5/registration/login.html'}, name='login'),
-    url(r'^chatlogs/admin/(?P<action>.+)/success/(?P<group>.*)$', views.chatlog_success),
     url(r'^chatlogs/admin/add/$', views.new_chatlog),
-    url(r'^chatlogs/admin/(?P<group>\w+)/(?P<action>.+)/success/$', views.chatlog_success),
+    url(r'^chatlogs/admin/(?P<group>\w+)/(?P<action>\w+)/success/$', views.chatlog_success),
     url(r'^chatlogs/admin/(?P<group>\w+)/edit/$', views.chatlog_edit),
     url(r'^chatlogs/admin/$', views.chatlog_admin),
-    url(r'^chatlogs/abargia/$', views.abargia)
+    url(r'^chatlogs/abargia/$', views.abargia),
+    url(r'^chatlogs/admin/(?P<action>.+)/success/(?P<group>.*)$', views.chatlog_success),
 ]
