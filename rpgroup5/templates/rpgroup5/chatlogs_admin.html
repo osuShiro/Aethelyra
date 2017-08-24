@@ -21,7 +21,7 @@
             <ul>
             {% for chatlog in chatlog_list %}
             <li>
-                <form action="edit/" method="post">
+                <form action="{{group}}/edit/" method="post">
                     {% csrf_token %}
                     {{chatlog.title}} <input type="submit" value="edit">
                     <input type="hidden" name="title" value={{chatlog.title}}>

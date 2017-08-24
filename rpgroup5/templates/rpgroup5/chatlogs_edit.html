@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit chatlog.</title>
+</head>
+<body>
+    <h4><form action="success/" method="post">
+            {% csrf_token %}
+            Editing chatlog
+            <input type="hidden" name="delete_title" value={{chatlog.title}}>
+            <input type="submit" value="delete" onclick="return confirm('Are you sure?')">
+        </form>
+    </h4>
+    <p>
+        <form action="success/" method="post">
+            {% csrf_token %}
+            Title:
+            <input type="text" maxlength="32" name="title" value={{chatlog.title}}>
+            <input type="hidden" name="old_title" value={{chatlog.title}}>
+            <input type="submit" value="change title">
+        </form>
+        <form action="success/" method="post">
+            {% csrf_token %}
+            <textarea rows="50" cols="200" name="content">{{chatlog.content}}</textarea><br />
+            <input type="hidden" name="chatlog_title" value={{chatlog.title}}>
+            <input type="submit" value="edit chatlog">
+        </form>
+    </p>
+</body>
+</html>

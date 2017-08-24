@@ -84,6 +84,10 @@ def view_chapter(request):
     else:
         return HttpResponse('Wtf are you trying to do')
 
+@login_required(login_url='/login/')
+@permission_required('rpgroup5.add_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.change_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.remove_sessionlog',raise_exception=True)
 def chatlog_admin(request):
     if request.method=='GET':
         return render(request,'rpgroup5/chatlogs_admin.html')
@@ -94,6 +98,22 @@ def chatlog_admin(request):
             return render(request,'rpgroup5/chatlogs_admin.html', {'group':group, 'chatlog_list':chatlog_list})
     else:
         render(Http404)
+
+@login_required(login_url='/login/')
+@permission_required('rpgroup5.add_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.change_sessionlog',raise_exception=True)
+@permission_required('rpgroup5.remove_sessionlog',raise_exception=True)
+def chatlog_edit(request, group):
+    if 'title' not in request.POST or request.POST['title']=='':
+        return HttpResponse('No chatlog selected.')
+    else:
+        chatlog_title=request.POST['title']
+        chatlog = SessionLog.objects.get(title=chatlog_title, rp_group=group.lower())
+        if chatlog:
+            pass
+        else:
+            return HttpResponse(group)
+    return render(request,'rpgroup5/chatlogs_edit.html',{'chatlog':chatlog})
 
 def abargia(request):
     return render(request,'rpgroup5/abargia.html')
