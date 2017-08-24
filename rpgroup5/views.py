@@ -85,7 +85,15 @@ def view_chapter(request):
         return HttpResponse('Wtf are you trying to do')
 
 def chatlog_admin(request):
-    return render(request,'rpgroup5/chatlogs_admin.html')
+    if request.method=='GET':
+        return render(request,'rpgroup5/chatlogs_admin.html')
+    elif request.method=='POST':
+        if 'group' in request.POST:
+            group=request.POST['group']
+            chatlog_list=list(SessionLog.objects.filter(rp_group=group.lower()))
+            return render(request,'rpgroup5/chatlogs_admin.html', {'group':group, 'chatlog_list':chatlog_list})
+    else:
+        render(Http404)
 
 def abargia(request):
     return render(request,'rpgroup5/abargia.html')

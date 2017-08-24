@@ -6,5 +6,22 @@
 </head>
 <body>
     <p><a href="add/">Add chatlog</a></p>
+    <form method="post">
+        {% csrf_token %}
+        <select name="group">
+            <option>select group to read logs for</option>
+            <option value="Abargia">Abargia</option>
+            <option value="Aethelyra">Aethelyra</option>
+        </select>
+        <input type="submit" value="find logs for selected group">
+    </form>
+    {% if group %}
+        <h4>Chat logs for {{group}}</h4>
+        {% if chatlog_list %}
+            list
+        {% else %}
+            No chat logs yet.
+        {% endif %}
+    {% endif %}
 </body>
 </html>
