@@ -115,5 +115,23 @@ def chatlog_edit(request, group):
             return HttpResponse(group)
     return render(request,'rpgroup5/chatlogs_edit.html',{'chatlog':chatlog})
 
+def chatlog_success(request,group,action):
+    if action=='edit':
+        if 'title' in request.POST:
+            chatlog=SessionLog.objects.get(rp_group=group.lower(), title=request.POST['old_title'])
+            chatlog.title=request.POST['title'].replace(' ', '').replace('\n', '')
+            chatlog.save()
+            return render(request,'rpgroup5/chatlog_success.html', {'action': 'changed title'})
+        elif 'content' in request.POST:
+            if 'chatlog_title' not in request.POST:
+                return HttpResponse('Chatlog not found.')
+            else:
+                chatlog=SessionLog.objects.get(rp_group=group.lower(), title=request.POST['chatlog_title'])
+                chatlog.content=request.POST['content']
+                chatlog.save()
+                return render(request,'rpgroup5/chatlog_success.html', {'action': 'updated chatlog'})
+    else:
+        return HttpResponse('Wtf are you trying to do')
+
 def abargia(request):
     return render(request,'rpgroup5/abargia.html')
