@@ -166,5 +166,16 @@ def new_chatlog(request):
     else:
         return HttpResponse('Wtf are you trying to do')
 
-def abargia(request):
-    return render(request,'rpgroup5/abargia.html')
+def chatlog_view(request, group):
+    chatlog_list = list(SessionLog.objects.filter(rp_group=group.lower()))
+    if request.method=='GET':
+        return render(request,'rpgroup5/chatlog_view.html', {'group':group, 'chatlog_list':chatlog_list})
+    elif request.method=='POST':
+        if 'title' not in request.POST:
+            return HttpResponse('No session selected.')
+        else:
+            chatlog=SessionLog.objects.get(rp_group=group.lower(), title=request.POST['title'])
+            print(chatlog.title)
+            return render(request, 'rpgroup5/chatlog_view.html', {'group': group, 'chatlog_list': chatlog_list, 'chatlog': chatlog})
+    else:
+        return HttpResponse('Wtf are you trying to do')
