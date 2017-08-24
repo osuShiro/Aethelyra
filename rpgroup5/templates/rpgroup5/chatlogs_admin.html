@@ -18,7 +18,17 @@
     {% if group %}
         <h4>Chat logs for {{group}}</h4>
         {% if chatlog_list %}
-            list
+            <ul>
+            {% for chatlog in chatlog_list %}
+            <li>
+                <form action="edit/" method="post">
+                    {% csrf_token %}
+                    {{chatlog.title}} <input type="submit" value="edit">
+                    <input type="hidden" name="title" value={{chatlog.title}}>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
         {% else %}
             No chat logs yet.
         {% endif %}
