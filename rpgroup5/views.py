@@ -40,7 +40,7 @@ def success(request, action):
         if 'title' not in request.POST or 'content' not in request.POST:
             return HttpResponse('Invalid chapter format (missing title or content).')
         else:
-            chapter_title=request.POST['title'].replace(' ', '').replace('\n', '')
+            chapter_title=request.POST['title'].replace(' ', '_').replace('\n', '_')
             chapter_content=request.POST['content']
             if chapter_title=='' or chapter_title.isspace():
                 return HttpResponse('Title cannot be blank.')
@@ -83,6 +83,9 @@ def view_chapter(request):
         return render(request,'rpgroup5/view.html',{'chapter_list':chapter_list,'chapter':chapter})
     else:
         return HttpResponse('Wtf are you trying to do')
+
+def chatlog_admin(request):
+    return render(request,'rpgroup5/chatlogs_admin.html')
 
 def abargia(request):
     return render(request,'rpgroup5/abargia.html')
