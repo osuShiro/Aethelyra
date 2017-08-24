@@ -116,7 +116,25 @@ def chatlog_edit(request, group):
     return render(request,'rpgroup5/chatlogs_edit.html',{'chatlog':chatlog})
 
 def chatlog_success(request,group,action):
-    if action=='edit':
+    if action=='add':
+        if 'title' not in request.POST or 'content' not in request.POST or 'group' not in request.POST:
+            return HttpResponse('Invalid chapter format (missing title, group or content).')
+        else:
+            chatlog_title=request.POST['title'].replace(' ', '_').replace('\n', '_')
+            chatlog_content=request.POST['content']
+            chatlog_group=request.POST['group'].lower()
+            if chatlog_title=='' or chatlog_title.isspace():
+                return HttpResponse('Title cannot be blank.')
+            if chatlog_content=='' or chatlog_content.isspace():
+                return HttpResponse('Chatlog cannot be empty.')
+            existing_chatlogs=list(SessionLog.objects.filter(rp_group=chatlog_group, title=chatlog_title))
+            if existing_chatlogs==[]:
+                new_chatlog=SessionLog(rp_group=chatlog_group, title=chatlog_title, content=chatlog_content)
+                new_chatlog.save()
+                return render(request, 'rpgroup5/chatlog_success.html', {'action': 'added chatlog'})
+            else:
+                return HttpResponse('Chapter name already exists.')
+    elif action=='edit':
         if 'title' in request.POST:
             chatlog=SessionLog.objects.get(rp_group=group.lower(), title=request.POST['old_title'])
             chatlog.title=request.POST['title'].replace(' ', '').replace('\n', '')
@@ -130,6 +148,14 @@ def chatlog_success(request,group,action):
                 chatlog.content=request.POST['content']
                 chatlog.save()
                 return render(request,'rpgroup5/chatlog_success.html', {'action': 'updated chatlog'})
+    else:
+        return HttpResponse('Wtf are you trying to do')
+
+@login_required(login_url='/login/')
+@permission_required('rpgroup5.add_sessionlog', raise_exception=True)
+def new_chatlog(request):
+    if request.method == 'GET':
+        return render(request, 'rpgroup5/chatlog_new.html')
     else:
         return HttpResponse('Wtf are you trying to do')
 
